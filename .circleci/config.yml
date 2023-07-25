@@ -9,7 +9,7 @@ orbs:
 # ================================================================= global pipeline parameters
 
 globals:
-  - &context twdps-core-labs-team
+  - &context empc-lab
   - &shell op run --env-file op.env -- /bin/bash -eo pipefail
   - &registry docker.io
 
