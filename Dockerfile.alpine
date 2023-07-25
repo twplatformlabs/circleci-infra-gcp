@@ -1,0 +1,102 @@
+FROM twdps/circleci-base-image:alpine-6.7.0
+
+LABEL org.opencontainers.image.title="circleci-infra-aws" \
+      org.opencontainers.image.description="Alpine-based CircleCI executor image" \
+      org.opencontainers.image.documentation="https://github.com/ThoughtWorks-DPS/circleci-infra-aws" \
+      org.opencontainers.image.source="https://github.com/ThoughtWorks-DPS/circleci-infra-aws" \
+      org.opencontainers.image.url="https://github.com/ThoughtWorks-DPS/circleci-infra-aws" \
+      org.opencontainers.image.vendor="ThoughtWorks, Inc." \
+      org.opencontainers.image.authors="nic.cheneweth@thoughtworks.com" \
+      org.opencontainers.image.licenses="MIT" \
+      org.opencontainers.image.created="CREATED" \
+      org.opencontainers.image.version="VERSION"
+
+ENV TERRAFORM_VERSION=1.5.1
+ENV TERRAFORM_SHA256SUM=31754361a9b16564454104bfae8dd40fc6b0c754401c51c58a1023b5e193aa29
+ENV TFLINT_VERSION=0.47.0
+ENV TFSEC_VERSION=1.28.1
+ENV GCLOUD_VERSION=440.0.0
+ENV GCLOUD_SHA256SUM=bf1cdd769a8f206f0e2dfab4afbe230114cb8be08d95d9c92e0c79e91b9ebfc1
+ENV CHECKOV_VERSION=2.3.301
+ENV DRIFTCTL_VERSION=0.39.0
+ENV CIRCLECIGEN_VERSION==0.0.9
+
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
+# sudo since twdps circleci remote docker images set the USER=cirlceci
+# hadolint ignore=DL3004
+RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories" && \
+    sudo apk add --no-cache \
+             gnupg==2.4.3-r1 \
+             docker==23.0.6-r3 \
+             openrc==0.48-r0 \
+             nodejs==18.17.0-r0 \
+             npm==9.6.6-r0 \
+             ruby==3.2.2-r0 \
+             ruby-webrick==1.8.1-r0 \
+             ruby-bundler==2.4.15-r0 \
+             python3==3.11.4-r0 \
+             jq==1.6-r3 && \
+    sudo apk add --no-cache --virtual build-dependencies \
+             build-base==0.5-r3 \
+             openssl-dev==3.1.1-r3 \
+             python3-dev==3.11.4-r0 \
+             ruby-dev==3.2.2-r0 \
+             libffi-dev==3.4.4-r2 \
+             g++==12.2.1_git20220924-r10 \
+             gcc==12.2.1_git20220924-r10 \
+             make==4.4.1-r1 && \
+    sudo rc-update add docker boot && \
+    sudo python3 -m ensurepip && \
+    sudo rm -r /usr/lib/python*/ensurepip && \
+    sudo pip3 install --upgrade pip==23.2.1 && \
+    if [ ! -e /usr/bin/pip ]; then sudo ln -s /usr/bin/pip3 /usr/bin/pip ; fi && \
+    sudo ln -s /usr/bin/pydoc3 /usr/bin/pydoc && \
+    sudo pip install --no-binary \
+             setuptools==68.0.0 \
+             wheel==0.40.0 \
+             invoke==1.7.3 \
+             requests==2.28.2 \
+             jinja2==3.1.2 \
+             checkov==${CHECKOV_VERSION} \
+             circlecigen==${CIRCLECIGEN_VERSION} && \
+    sudo npm install -g \
+             snyk@1.1184.0 \
+             github-release-notes@0.17.3 \
+             bats@1.9.0 && \
+    sudo sh -c "echo 'gem: --no-document' > /etc/gemrc" && \
+    sudo gem install \
+             inspec-bin:5.21.29 \
+             json:2.6.3 && \
+    curl -SLO "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" && \
+    echo "${GCLOUD_SHA256SUM} google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
+    sha256sum -cs "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && sudo rm "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
+    tar -xvzf google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz && \
+    rm google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz && \
+    sudo chmod +x ./google-cloud-sdk/install.sh && \
+    sh ./google-cloud-sdk//install.sh && \
+    curl -SLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
+    sha256sum -cs "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && sudo rm "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
+    sudo unzip "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -d /usr/local/bin && \
+    sudo rm "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    curl -SLO "https://github.com/terraform-linters/tflint/releases/download/v${TFLINT_VERSION}/tflint_linux_amd64.zip" > tflint_linux_amd64.zip && \
+    sudo unzip tflint_linux_amd64.zip -d /usr/local/bin && \
+    sudo rm tflint_linux_amd64.zip && \
+    curl -SLO https://github.com/aquasecurity/tfsec/releases/download/v${TFSEC_VERSION}/tfsec-linux-amd64 && \
+    chmod +x tfsec-linux-amd64 && \
+    sudo mv tfsec-linux-amd64 /usr/local/bin/tfsec && \
+    curl -L https://github.com/snyk/driftctl/releases/download/v${DRIFTCTL_VERSION}/driftctl_linux_amd64 -o driftctl && \
+    chmod +x driftctl && \
+    sudo mv driftctl /usr/local/bin/driftctl && \
+    sudo -u circleci mkdir /home/circleci/.gnupg && \
+    sudo -u circleci bash -c "echo 'allow-loopback-pinentry' > /home/circleci/.gnupg/gpg-agent.conf" && \
+    sudo -u circleci bash -c "echo 'pinentry-mode loopback' > /home/circleci/.gnupg/gpg.conf" && \
+    chmod 700 /home/circleci/.gnupg && chmod 600 /home/circleci/.gnupg/* && \
+    sudo apk del build-dependencies
+
+ENV PATH="/home/circleci/project/google-cloud-sdk/bin:$PATH"
+
+COPY inspec /etc/chef/accepted_licenses/inspec
+
+USER circleci
