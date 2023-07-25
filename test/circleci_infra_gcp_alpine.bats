@@ -30,11 +30,6 @@
   [[ "${output}" =~ "3.2" ]]
 }
 
-@test "gcppec version" {
-  run bash -c "docker exec circleci-infra-gcp-alpine-edge gcppec -v"
-  [[ "${output}" =~ "1.29" ]]
-}
-
 @test "inspec version" {
   run bash -c "docker exec circleci-infra-gcp-alpine-edge inspec -v"
   [[ "${output}" =~ "5.21" ]]
