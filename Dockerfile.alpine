@@ -71,10 +71,11 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
     curl -SLO "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" && \
     echo "${GCLOUD_SHA256SUM} google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
     sha256sum -cs "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && sudo rm "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
-    tar -xvzf google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz && \
+    sudo tar -xvzf google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz -C /usr/local && \
     rm google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz && \
-    sudo chmod +x ./google-cloud-sdk/install.sh && \
-    sh ./google-cloud-sdk//install.sh && \
+    sudo chmod +x /usr/local/google-cloud-sdk/install.sh && \
+    sudo chown -R $(whoami) /usr/local/google-cloud-sdk && \
+    sh /usr/local/google-cloud-sdk/install.sh -q && \
     curl -SLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
     echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
     sha256sum -cs "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && sudo rm "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
@@ -95,7 +96,7 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
     chmod 700 /home/circleci/.gnupg && chmod 600 /home/circleci/.gnupg/* && \
     sudo apk del build-dependencies
 
-ENV PATH="/home/circleci/project/google-cloud-sdk/bin:$PATH"
+ENV PATH="/usr/local/google-cloud-sdk/bin:$PATH"
 
 COPY inspec /etc/chef/accepted_licenses/inspec
 

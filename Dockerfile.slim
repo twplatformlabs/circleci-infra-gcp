@@ -23,7 +23,7 @@ ENV CIRCLECIGEN_VERSION==0.0.9
 ENV DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
-ENV PATH=/home/circleci/.rbenv/bin:$PATH:/usr/local/go/bin:/home/circleci/.cargo/bin
+ENV PATH=/usr/local/google-cloud-sdk/bin:/home/circleci/.rbenv/bin:$PATH:/usr/local/go/bin:/home/circleci/.cargo/bin
 ENV GOPATH=/home/circleci/.go
 
 # sudo since twdps circleci base images set the USER=cirlceci
@@ -72,10 +72,11 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     curl -SLO "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" && \
     echo "${GCLOUD_SHA256SUM} google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
     sha256sum -c "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && sudo rm "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
-    tar -xvzf google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz && \
+    sudo tar -xvzf google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz -C /usr/local && \
     rm google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz && \
-    sudo chmod +x ./google-cloud-sdk/install.sh && \
-    sh ./google-cloud-sdk//install.sh -q && \
+    sudo chmod +x /usr/local/google-cloud-sdk/install.sh && \
+    sudo chown -R $(whoami) /usr/local/google-cloud-sdk && \
+    sh /usr/local/google-cloud-sdk/install.sh -q && \
     curl -SLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
     echo "${TERRAFORM_SHA256SUM}  terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
     sha256sum -c "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && sudo rm "terraform_${TERRAFORM_VERSION}_SHA256SUMS" && \
@@ -96,8 +97,6 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     chmod 700 /home/circleci/.gnupg && chmod 600 /home/circleci/.gnupg/* && \
     sudo apt-get clean && \
     sudo rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/home/circleci/project/google-cloud-sdk/bin:$PATH"
 
 COPY inspec /etc/chef/accepted_licenses/inspec
 
