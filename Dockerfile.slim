@@ -1,4 +1,4 @@
-FROM twdps/circleci-base-image:slim-6.7.0
+FROM twdps/circleci-base-image:slim-stable
 
 LABEL org.opencontainers.image.title="circleci-infra-gcp" \
       org.opencontainers.image.description="Debian-based CircleCI executor image" \
@@ -30,17 +30,17 @@ ENV GOPATH=/home/circleci/.go
 # hadolint ignore=DL3004
 RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
                  wget=1.21.3-1+b2 \
-                 jq=1.6-2.1 \
+                 jq=1.6-3 \
                  bzip2=1.0.8-5+b1 \
                  unzip=6.0-28 \
                  gnupg=2.2.40-1.1 \
                  ruby-full=1:3.1 \
-                 python3-dev=3.11.4-5 \
+                 python3-dev=3.11.4-5+b1 \
                  python3-pip \
-                 python3-venv=3.11.4-5 \
+                 python3-venv=3.11.4-5+b1 \
                  lsb-release=12.0-2 \
-                 gcc=4:13.1.0-4 \
-                 g++=4:13.1.0-4 \
+                 gcc=4:13.2.0-1 \
+                 g++=4:13.2.0-1 \
                  make=4.3-4.1 && \
     sudo mkdir -p /etc/apt/keyrings && \
     sudo bash -c "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" && \
