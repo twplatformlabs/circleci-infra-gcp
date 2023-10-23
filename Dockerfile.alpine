@@ -1,12 +1,12 @@
 FROM twdps/circleci-base-image:alpine-6.7.0
 
-LABEL org.opencontainers.image.title="circleci-infra-aws" \
+LABEL org.opencontainers.image.title="circleci-infra-gcp" \
       org.opencontainers.image.description="Alpine-based CircleCI executor image" \
-      org.opencontainers.image.documentation="https://github.com/ThoughtWorks-DPS/circleci-infra-aws" \
-      org.opencontainers.image.source="https://github.com/ThoughtWorks-DPS/circleci-infra-aws" \
-      org.opencontainers.image.url="https://github.com/ThoughtWorks-DPS/circleci-infra-aws" \
+      org.opencontainers.image.documentation="https://github.com/ThoughtWorks-DPS/circleci-infra-gcp" \
+      org.opencontainers.image.source="https://github.com/ThoughtWorks-DPS/circleci-infra-gcp" \
+      org.opencontainers.image.url="https://github.com/ThoughtWorks-DPS/circleci-infra-gcp" \
       org.opencontainers.image.vendor="ThoughtWorks, Inc." \
-      org.opencontainers.image.authors="nic.cheneweth@thoughtworks.com" \
+      org.opencontainers.image.authors="sean.alvarez@thoughtworks.com" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.created="CREATED" \
       org.opencontainers.image.version="VERSION"
