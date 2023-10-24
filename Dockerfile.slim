@@ -1,4 +1,4 @@
-FROM twdps/circleci-base-image:slim-stable
+FROM twdps/circleci-base-image:slim-6.11.0
 
 LABEL org.opencontainers.image.title="circleci-infra-gcp" \
       org.opencontainers.image.description="Debian-based CircleCI executor image" \
@@ -11,15 +11,15 @@ LABEL org.opencontainers.image.title="circleci-infra-gcp" \
       org.opencontainers.image.created="CREATED" \
       org.opencontainers.image.version="VERSION"
 
-ENV TERRAFORM_VERSION=1.5.1
-ENV TERRAFORM_SHA256SUM=31754361a9b16564454104bfae8dd40fc6b0c754401c51c58a1023b5e193aa29
-ENV TFLINT_VERSION=0.47.0
-ENV TFSEC_VERSION=1.28.1
-ENV GCLOUD_VERSION=440.0.0
-ENV GCLOUD_SHA256SUM=bf1cdd769a8f206f0e2dfab4afbe230114cb8be08d95d9c92e0c79e91b9ebfc1
+ENV TERRAFORM_VERSION=1.6.2
+ENV TERRAFORM_SHA256SUM=183d4654a9e24be4226a9e9f0eafe71ae9b4aadac7c1c7677173989c9530563e
+ENV TFLINT_VERSION=0.48.0
+ENV TFSEC_VERSION=1.28.4
+ENV GCLOUD_VERSION=451.0.1
+ENV GCLOUD_SHA256SUM=8446f6d837168d7d66dd192c2221c1081c16a2b93cb54642a6bfb7078cd3dd53
 ENV CHECKOV_VERSION=2.3.301
-ENV DRIFTCTL_VERSION=0.39.0
-ENV CIRCLECIGEN_VERSION==0.0.9
+ENV CIRCLEPIPE_VERSION=0.2.0
+ENV COSIGN_VERSION=2.2.0
 ENV DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
@@ -29,8 +29,8 @@ ENV GOPATH=/home/circleci/.go
 # sudo since twdps circleci base images set the USER=cirlceci
 # hadolint ignore=DL3004
 RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
-                 wget=1.21.3-1+b2 \
-                 jq=1.6-3 \
+                 wget=1.21.4-1+b1 \
+                 jq=1.7-1 \
                  bzip2=1.0.8-5+b1 \
                  unzip=6.0-28 \
                  gnupg=2.2.40-1.1 \
@@ -46,29 +46,28 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     sudo bash -c "curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg" && \
     sudo bash -c "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian bullseye stable\" | tee /etc/apt/sources.list.d/docker.list > /dev/null" && sudo apt-get update && \
     sudo apt-get install --no-install-recommends -y \
-                 docker-ce=5:24.0.2-1~debian.11~bullseye \
-                 docker-compose-plugin=2.18.1-1~debian.11~bullseye \
+                 docker-ce=5:24.0.6-1~debian.11~bullseye \
+                 docker-compose-plugin=2.21.0-1~debian.11~bullseye \
                  nodejs=18.13.0+dfsg1-1 \
                  npm=9.2.0~ds1-1 && \
     sudo ln -f -s /usr/bin/pip3 /usr/bin/pip && \
     sudo ln -f -s /usr/bin/pydoc3 /usr/bin/pydoc && \
     sudo ln -f -s /usr/bin/python3 /usr/bin/python && \
     sudo ln -f -s /usr/bin/python3-config /usr/bin/python-config && \
-    sudo pip install --no-cache-dir --break-system-packages setuptools==67.6.0 && \
+    sudo pip install --no-cache-dir --break-system-packages setuptools==68.2.2 && \
     sudo pip install --no-cache-dir --break-system-packages \
-             wheel==0.40.0 \
-             invoke==1.7.3 \
+             wheel==0.41.2 \
+             invoke==2.2.0 \
              requests==2.28.2 \
              jinja2==3.1.2 \
-             checkov==${CHECKOV_VERSION} \
-             circlecigen==${CIRCLECIGEN_VERSION} && \
+             checkov==${CHECKOV_VERSION} && \
     sudo gem install --no-document \
-             inspec-bin:5.21.29 \
+             inspec-bin:5.22.3 \
              json:2.6.2 && \
     sudo npm install -g \
-             snyk@1.1184.0 \
+             snyk@1.1233.0 \
              github-release-notes@0.17.3 \
-             bats@1.9.0 && \
+             bats@1.10.0 && \
     curl -SLO "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" && \
     echo "${GCLOUD_SHA256SUM} google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
     sha256sum -c "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && sudo rm "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \

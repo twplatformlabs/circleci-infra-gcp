@@ -20,6 +20,25 @@ ENV GCLOUD_SHA256SUM=bf1cdd769a8f206f0e2dfab4afbe230114cb8be08d95d9c92e0c79e91b9
 ENV CHECKOV_VERSION=2.3.301
 ENV DRIFTCTL_VERSION=0.39.0
 ENV CIRCLECIGEN_VERSION==0.0.9
+# renovate: datasource=repology depName=alpine_3_18/gnupg versioning=loose
+ENV GNUPG_VERSION=2.4.3-r0
+# renovate: datasource=repology depName=alpine_3_18/docker versioning=loose
+ENV DOCKER_VERSION=23.0.6-r4
+# renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
+ENV OPENRC_VERSION=0.48-r0
+# renovate: datasource=repology depName=alpine_3_18/nodejs versioning=loose
+ENV NODEJS_VERSION=18.17.1-r0
+
+# renovate: datasource=repology depName=pypi/pip versioning=loose
+ENV PIP_VERSION=23.2.1
+# renovate: datasource=repology depName=pypi/setuptools versioning=loose
+ENV SETUPTOOLS_VERSION=68.0.0
+
+# renovate: datasource=npm depName=snyk versioning=loose
+ENV SNYK_VERSION=1.1184.0
+
+# renovate: datasource=repology depName=rubygems/inspec-bin versioning=loose
+ENV INSPEC_BIN_VERSION=5.21.29
 
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 
@@ -27,10 +46,10 @@ SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3004
 RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories" && \
     sudo apk add --no-cache \
-             gnupg==2.4.3-r1 \
-             docker==23.0.6-r4 \
-             openrc==0.48-r0 \
-             nodejs==18.17.1-r0 \
+             gnupg==$GNUPG_VERSION \
+             docker==$DOCKER_VERSION4 \
+             openrc==$OPENRC_VERSION \
+             nodejs==$NODEJS_VERSION \
              npm==9.6.6-r0 \
              ruby==3.2.2-r0 \
              ruby-webrick==1.8.1-r0 \
@@ -49,11 +68,11 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
     sudo rc-update add docker boot && \
     sudo python3 -m ensurepip && \
     sudo rm -r /usr/lib/python*/ensurepip && \
-    sudo pip3 install --upgrade pip==23.2.1 && \
+    sudo pip3 install --upgrade pip==$PIP_VERSION && \
     if [ ! -e /usr/bin/pip ]; then sudo ln -s /usr/bin/pip3 /usr/bin/pip ; fi && \
     sudo ln -s /usr/bin/pydoc3 /usr/bin/pydoc && \
     sudo pip install --no-binary \
-             setuptools==68.0.0 \
+             setuptools==$SETUPTOOLS_VERSION \
              wheel==0.40.0 \
              invoke==1.7.3 \
              requests==2.28.2 \
@@ -61,12 +80,12 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
              checkov==${CHECKOV_VERSION} \
              circlecigen==${CIRCLECIGEN_VERSION} && \
     sudo npm install -g \
-             snyk@1.1184.0 \
+             $SNYK_VERSION@1.1184.0 \
              github-release-notes@0.17.3 \
              bats@1.9.0 && \
     sudo sh -c "echo 'gem: --no-document' > /etc/gemrc" && \
     sudo gem install \
-             inspec-bin:5.21.29 \
+             inspec-bin:$INSPEC_BIN_VERSION \
              json:2.6.3 && \
     curl -SLO "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" && \
     echo "${GCLOUD_SHA256SUM} google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
