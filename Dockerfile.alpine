@@ -11,6 +11,8 @@ LABEL org.opencontainers.image.title="circleci-infra-gcp" \
       org.opencontainers.image.created="CREATED" \
       org.opencontainers.image.version="VERSION"
 
+
+########## VENDOR TOOL VERSIONS ##########
 ENV TERRAFORM_VERSION=1.5.1
 ENV TERRAFORM_SHA256SUM=31754361a9b16564454104bfae8dd40fc6b0c754401c51c58a1023b5e193aa29
 ENV TFLINT_VERSION=0.47.0
@@ -20,25 +22,61 @@ ENV GCLOUD_SHA256SUM=bf1cdd769a8f206f0e2dfab4afbe230114cb8be08d95d9c92e0c79e91b9
 ENV CHECKOV_VERSION=2.3.301
 ENV DRIFTCTL_VERSION=0.39.0
 ENV CIRCLECIGEN_VERSION==0.0.9
+
+########## ALPINE VERSIONS ##########
 # renovate: datasource=repology depName=alpine_3_18/gnupg versioning=loose
 ENV GNUPG_VERSION="2.4.3-r0"
 # renovate: datasource=repology depName=alpine_3_18/docker versioning=loose
 ENV DOCKER_VERSION="18.06.1"
 # renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
 ENV OPENRC_VERSION="0.48-r0"
-# renovate: datasource=repology depName=alpine_3_18/nodejs versioning=deb
+# renovate: datasource=repology depName=alpine_3_18/nodejs versioning=loose
 ENV NODEJS_VERSION="18.18.2-r0"
+# renovate: datasource=repology depName=alpine_3_18/npm versioning=loose
+ENV NPM_VERSION="9.6.6-r0"
+# renovate: datasource=repology depName=alpine_3_18/ruby versioning=loose
+ENV RUBY_VERSION="3.2.2-r0"
+# renovate: datasource=repology depName=alpine_3_18/ruby-webrick versioning=loose
+ENV RUBY_WEBRICK_VERSION="1.8.1-r0"
+# renovate: datasource=repology depName=alpine_3_18/ruby-bundler versioning=loose
+ENV RUBY_BUNDLER_VERSION="2.4.15-r0"
+# renovate: datasource=repology depName=alpine_3_18/python3 versioning=loose
+ENV PYTHON3_VERSION="3.11.5-r0"
+# renovate: datasource=repology depName=alpine_3_18/jq versioning=loose
+ENV JQ_VERSION="1.6-r3"
+# renovate: datasource=repology depName=alpine_3_18/build-base versioning=loose
+ENV BUILD_BASE_VERSION="0.5-r3"
+# renovate: datasource=repology depName=alpine_3_18/openssl-dev versioning=loose
+ENV OPENSSL_DEV_VERSION="3.1.2-r0"
+# renovate: datasource=repology depName=alpine_3_18/python3-dev versioning=loose
+ENV PYTHON3_DEV_VERSION="3.11.5-r0"
+# renovate: datasource=repology depName=alpine_3_18/ruby-dev versioning=loose
+ENV RUBY_DEV_VERSION="3.2.2-r0"
+# renovate: datasource=repology depName=alpine_3_18/libffi-dev versioning=loose
+ENV LIBFFI_DEV_VERSION="3.4.4-r2"
+# renovate: datasource=repology depName=alpine_3_18/g++ versioning=loose
+ENV GPP_VERSION="12.2.1_git20220924-r10"
+# renovate: datasource=repology depName=alpine_3_18/gcc versioning=loose
+ENV GCC_VERSION="12.2.1_git20220924-r10"
+# renovate: datasource=repology depName=alpine_3_18/make versioning=loose
+ENV MAKE_VERSION="4.4.1-r1"
 
+########## PYTHON VERSIONS ##########
 # renovate: datasource=repology depName=pypi/pip versioning=loose
 ENV PIP_VERSION="23.3.1"
 # renovate: datasource=repology depName=pypi/setuptools versioning=loose
 ENV SETUPTOOLS_VERSION="68.0.0"
 
+########## NPM VERSIONS ##########
 # renovate: datasource=npm depName=snyk versioning=loose
 ENV SNYK_VERSION="1.1184.0"
 
+########## RUBY VERSIONS ##########
 # renovate: datasource=repology depName=rubygems/inspec-bin versioning=loose
 ENV INSPEC_BIN_VERSION="5.21.29"
+
+
+########## SCRIPTS ##########
 
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 
@@ -46,25 +84,25 @@ SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 # hadolint ignore=DL3004
 RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories" && \
     sudo apk add --no-cache \
-             gnupg==$GNUPG_VERSION \
-             docker==$DOCKER_VERSION4 \
-             openrc==$OPENRC_VERSION \
-             nodejs==$NODEJS_VERSION \
-             npm==9.6.6-r0 \
-             ruby==3.2.2-r0 \
-             ruby-webrick==1.8.1-r0 \
-             ruby-bundler==2.4.15-r0 \
-             python3==3.11.5-r0 \
-             jq==1.6-r3 && \
+             gnupg==${GNUPG_VERSION} \
+             docker==${DOCKER_VERSION} \
+             openrc==${OPENRC_VERSION} \
+             nodejs==${NODEJS_VERSION} \
+             npm==${NPM_VERSION} \
+             ruby==${RUBY_VERSION} \
+             ruby-webrick==${RUBY_WEBRICK_VERSION} \
+             ruby-bundler==${RUBY_BUNDLER_VERSION} \
+             python3==${PYTHON3_VERSION} \
+             jq==${JQ_VERSION} && \
     sudo apk add --no-cache --virtual build-dependencies \
-             build-base==0.5-r3 \
-             openssl-dev==3.1.2-r0 \
-             python3-dev==3.11.5-r0 \
-             ruby-dev==3.2.2-r0 \
-             libffi-dev==3.4.4-r2 \
-             g++==12.2.1_git20220924-r10 \
-             gcc==12.2.1_git20220924-r10 \
-             make==4.4.1-r1 && \
+             build-base==${BUILD_BASE_VERSION} \
+             openssl-dev==${OPENSSL_DEV_VERSION} \
+             python3-dev==${PYTHON3_DEV_VERSION} \
+             ruby-dev==${RUBY_DEV_VERSION} \
+             libffi-dev==${LIBFFI_DEV_VERSION} \
+             g++==${GPP_VERSION} \
+             gcc==${GCC_VERSION} \
+             make==${MAKE_VERSION} && \
     sudo rc-update add docker boot && \
     sudo python3 -m ensurepip && \
     sudo rm -r /usr/lib/python*/ensurepip && \
