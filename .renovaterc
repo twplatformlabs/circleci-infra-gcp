@@ -2,7 +2,7 @@
     "customManagers": [
       {
         "customType": "regex",
-        "fileMatch": ["^Dockerfile.alpine$"],
+        "fileMatch": ["^Dockerfile*.+$"],
         "matchStrings": [
           "#\\s*renovate:\\s*datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sENV .*?_VERSION=\"(?<currentValue>.*)\"\\s"
         ],
@@ -10,5 +10,5 @@
       }
     ],
     "branchPrefix": "renovate-test-",
-    "branchPrefixOld": "renovate-first-test-",
+    "branchPrefixOld": "renovate-first-test-"
   }
