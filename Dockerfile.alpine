@@ -39,7 +39,7 @@ ENV RUBY_WEBRICK_VERSION="1.8.1-r0"
 # renovate: datasource=repology depName=alpine_3_18/ruby-bundler versioning=loose
 ENV RUBY_BUNDLER_VERSION="2.4.15-r0"
 # renovate: datasource=repology depName=alpine_3_18/python3 versioning=loose
-ENV PYTHON3_VERSION="3.11.5-r0"
+ENV PYTHON3_VERSION="3.11.6-r0"
 # renovate: datasource=repology depName=alpine_3_18/jq versioning=loose
 ENV JQ_VERSION="1.6-r3"
 # renovate: datasource=repology depName=alpine_3_18/build-base versioning=loose
