@@ -67,7 +67,7 @@ ENV SETUPTOOLS_VERSION="68.0.0"
 # renovate: datasource=repology depName=pypi/wheel versioning=loose
 ENV WHEEL_VERSION="0.40.0"
 # renovate: datasource=repology depName=pypi/invoke versioning=loose
-ENV INVOKE_VERSION="1.7.3"
+ENV INVOKE_VERSION="2.2.0"
 # renovate: datasource=repology depName=pypi/requests versioning=loose
 ENV REQUESTS_VERSION="2.28.2"
 # renovate: datasource=repology depName=pypi/jinja2 versioning=loose
