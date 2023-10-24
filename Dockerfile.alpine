@@ -83,7 +83,7 @@ ENV SNYK_VERSION="1.1184.0"
 # renovate: datasource=npm depName=github-release-notes versioning=loose
 ENV GITHUB_RELEASE_NOTES_VERSION="0.17.3"
 # renovate: datasource=npm depName=bats versioning=loose
-ENV BATS_VERSION="1.9.0"
+ENV BATS_VERSION="1.10.0"
 
 ########## RUBY VERSIONS ##########
 # renovate: datasource=repology depName=rubygems/inspec-bin versioning=loose
