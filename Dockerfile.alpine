@@ -79,7 +79,7 @@ ENV CIRCLECIGEN_VERSION=="0.0.9"
 
 ########## NPM VERSIONS ##########
 # renovate: datasource=npm depName=snyk versioning=loose
-ENV SNYK_VERSION="1.1184.0"
+ENV SNYK_VERSION="1.1237.0"
 # renovate: datasource=npm depName=github-release-notes versioning=loose
 ENV GITHUB_RELEASE_NOTES_VERSION="0.17.3"
 # renovate: datasource=npm depName=bats versioning=loose
