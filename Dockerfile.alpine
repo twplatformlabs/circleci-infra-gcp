@@ -23,7 +23,7 @@ ENV CIRCLECIGEN_VERSION==0.0.9
 # renovate: datasource=repology depName=alpine_3_18/gnupg versioning=loose
 ENV GNUPG_VERSION=2.4.3-r0
 # renovate: datasource=repology depName=alpine_3_18/docker versioning=loose
-ENV DOCKER_VERSION=23.0.6-r4
+ENV DOCKER_VERSION=18.06.1
 # renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
 ENV OPENRC_VERSION=0.48-r0
 # renovate: datasource=repology depName=alpine_3_18/nodejs versioning=loose
