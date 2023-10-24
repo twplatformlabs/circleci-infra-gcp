@@ -1,5 +1,6 @@
 {
   "prConcurrentLimit": 0,
+  "branchConcurrentLimit": 0,
   "customManagers": [
     {
       "customType": "regex",
