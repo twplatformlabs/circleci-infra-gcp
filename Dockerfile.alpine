@@ -13,12 +13,14 @@ LABEL org.opencontainers.image.title="circleci-infra-gcp" \
 
 
 ########## VENDOR TOOL VERSIONS ##########
-ENV TERRAFORM_VERSION=1.5.1
-ENV TERRAFORM_SHA256SUM=31754361a9b16564454104bfae8dd40fc6b0c754401c51c58a1023b5e193aa29
-ENV TFLINT_VERSION=0.47.0
-ENV TFSEC_VERSION=1.28.1
-ENV GCLOUD_VERSION=440.0.0
-ENV GCLOUD_SHA256SUM=bf1cdd769a8f206f0e2dfab4afbe230114cb8be08d95d9c92e0c79e91b9ebfc1
+ENV TERRAFORM_VERSION=1.6.2
+ENV TERRAFORM_SHA256SUM=183d4654a9e24be4226a9e9f0eafe71ae9b4aadac7c1c7677173989c9530563e
+ENV TFLINT_VERSION=0.48.0
+ENV TFSEC_VERSION=1.28.4
+ENV GCLOUD_VERSION=451.0.1
+ENV GCLOUD_SHA256SUM=8446f6d837168d7d66dd192c2221c1081c16a2b93cb54642a6bfb7078cd3dd53
+ENV CIRCLEPIPE_VERSION=0.2.0
+ENV COSIGN_VERSION=2.2.0
 ENV DRIFTCTL_VERSION=0.39.0
 
 ########## ALPINE VERSIONS ##########
@@ -126,20 +128,20 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
     sudo ln -s /usr/bin/pydoc3 /usr/bin/pydoc && \
     sudo pip install --no-binary \
              setuptools==${SETUPTOOLS_VERSION} \
-             wheel==${WHEEL_VERSION}} \
+             wheel==${WHEEL_VERSION} \
              invoke==${INVOKE_VERSION} \
              requests==${REQUESTS_VERSION} \
              jinja2==${JINJA2_VERSION} \
              checkov==${CHECKOV_VERSION} \
              circlecigen==${CIRCLECIGEN_VERSION} && \
     sudo npm install -g \
-             snyk@${SNYK_VERSION}} \
+             snyk@${SNYK_VERSION} \
              github-release-notes@${GITHUB_RELEASE_NOTES_VERSION} \
-             bats@${BATS_VERSION}} && \
+             bats@${BATS_VERSION} && \
     sudo sh -c "echo 'gem: --no-document' > /etc/gemrc" && \
     sudo gem install \
              inspec-bin:${INSPEC_BIN_VERSION} \
-             json:${JSON_VERSION}} && \
+             json:${JSON_VERSION} && \
     curl -SLO "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" && \
     echo "${GCLOUD_SHA256SUM} google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
     sha256sum -cs "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && sudo rm "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
@@ -162,6 +164,12 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
     curl -L https://github.com/snyk/driftctl/releases/download/v${DRIFTCTL_VERSION}/driftctl_linux_amd64 -o driftctl && \
     chmod +x driftctl && \
     sudo mv driftctl /usr/local/bin/driftctl && \
+    curl -SLO https://github.com/ThoughtWorks-DPS/circlepipe/releases/download/${CIRCLEPIPE_VERSION}/circlepipe_Linux_amd64.tar.gz && \
+    mkdir ./circlepipe && tar -xzf circlepipe_Linux_amd64.tar.gz -C ./circlepipe && \
+    sudo mv ./circlepipe/circlepipe /usr/local/bin/circlepipe && \
+    sudo rm -rf ./circlepipe circlepipe_Linux_amd64.tar.gz && \
+    curl -LO https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64 && \
+    chmod +x cosign-linux-amd64 && sudo mv cosign-linux-amd64 /usr/local/bin/cosign && \
     sudo -u circleci mkdir /home/circleci/.gnupg && \
     sudo -u circleci bash -c "echo 'allow-loopback-pinentry' > /home/circleci/.gnupg/gpg-agent.conf" && \
     sudo -u circleci bash -c "echo 'pinentry-mode loopback' > /home/circleci/.gnupg/gpg.conf" && \

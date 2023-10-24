@@ -1,11 +1,11 @@
 {
   "packageRules": [
     {
-      "matchSourceUrls": [".*Dockerfile.alpine$"],
+      "matchFileNames": ["Dockerfile.alpine"],
       "groupName": "Alpine Dockerfile packages"
     },
     {
-      "matchSourceUrls": [".*Dockerfile.slim$"],
+      "matchFileNames": ["Dockerfile.slim"],
       "groupName": "Slim Dockerfile packages"
     }
   ],
@@ -25,5 +25,6 @@
     "config:recommended",
     ":prHourlyLimitNone",
     ":rebaseStalePrs"
-  ]
+  ],
+  "ignorePresets": [":prHourlyLimit2"]
 }
