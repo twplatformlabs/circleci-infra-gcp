@@ -1,4 +1,5 @@
 {
+  "platformCommit": true,
   "customManagers": [
     {
       "customType": "regex",
@@ -10,7 +11,5 @@
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
-  ],
-  "branchPrefix": "renovate-test-",
-  "branchPrefixOld": "renovate-first-test-"
+  ]
 }
