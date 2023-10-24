@@ -47,7 +47,7 @@ ENV BUILD_BASE_VERSION="0.5-r3"
 # renovate: datasource=repology depName=alpine_3_18/openssl-dev versioning=loose
 ENV OPENSSL_DEV_VERSION="3.1.4-r0"
 # renovate: datasource=repology depName=alpine_3_18/python3-dev versioning=loose
-ENV PYTHON3_DEV_VERSION="3.11.5-r0"
+ENV PYTHON3_DEV_VERSION="3.11.6-r0"
 # renovate: datasource=repology depName=alpine_3_18/ruby-dev versioning=loose
 ENV RUBY_DEV_VERSION="3.2.2-r0"
 # renovate: datasource=repology depName=alpine_3_18/libffi-dev versioning=loose
