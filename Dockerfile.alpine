@@ -19,9 +19,7 @@ ENV TFLINT_VERSION=0.47.0
 ENV TFSEC_VERSION=1.28.1
 ENV GCLOUD_VERSION=440.0.0
 ENV GCLOUD_SHA256SUM=bf1cdd769a8f206f0e2dfab4afbe230114cb8be08d95d9c92e0c79e91b9ebfc1
-ENV CHECKOV_VERSION=2.3.301
 ENV DRIFTCTL_VERSION=0.39.0
-ENV CIRCLECIGEN_VERSION==0.0.9
 
 ########## ALPINE VERSIONS ##########
 # renovate: datasource=repology depName=alpine_3_18/gnupg versioning=loose
@@ -66,15 +64,32 @@ ENV MAKE_VERSION="4.4.1-r1"
 ENV PIP_VERSION="23.3.1"
 # renovate: datasource=repology depName=pypi/setuptools versioning=loose
 ENV SETUPTOOLS_VERSION="68.0.0"
+# renovate: datasource=repology depName=pypi/wheel versioning=loose
+ENV WHEEL_VERSION="0.40.0"
+# renovate: datasource=repology depName=pypi/invoke versioning=loose
+ENV INVOKE_VERSION="1.7.3"
+# renovate: datasource=repology depName=pypi/requests versioning=loose
+ENV REQUESTS_VERSION="2.28.2"
+# renovate: datasource=repology depName=pypi/jinja2 versioning=loose
+ENV JINJA2_VERSION="3.1.2"
+# renovate: datasource=repology depName=pypi/checkov versioning=loose
+ENV CHECKOV_VERSION="2.3.301"
+# renovate: datasource=repology depName=pypi/circlecigen versioning=loose
+ENV CIRCLECIGEN_VERSION=="0.0.9"
 
 ########## NPM VERSIONS ##########
 # renovate: datasource=npm depName=snyk versioning=loose
 ENV SNYK_VERSION="1.1184.0"
+# renovate: datasource=npm depName=github-release-notes versioning=loose
+ENV GITHUB_RELEASE_NOTES_VERSION="0.17.3"
+# renovate: datasource=npm depName=bats versioning=loose
+ENV BATS_VERSION="1.9.0"
 
 ########## RUBY VERSIONS ##########
 # renovate: datasource=repology depName=rubygems/inspec-bin versioning=loose
 ENV INSPEC_BIN_VERSION="5.21.29"
-
+# renovate: datasource=repology depName=rubygems/json versioning=loose
+ENV JSON_VERSION="2.6.3"
 
 ########## SCRIPTS ##########
 
@@ -106,25 +121,25 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
     sudo rc-update add docker boot && \
     sudo python3 -m ensurepip && \
     sudo rm -r /usr/lib/python*/ensurepip && \
-    sudo pip3 install --upgrade pip==$PIP_VERSION && \
+    sudo pip3 install --upgrade pip==${PIP_VERSION} && \
     if [ ! -e /usr/bin/pip ]; then sudo ln -s /usr/bin/pip3 /usr/bin/pip ; fi && \
     sudo ln -s /usr/bin/pydoc3 /usr/bin/pydoc && \
     sudo pip install --no-binary \
-             setuptools==$SETUPTOOLS_VERSION \
-             wheel==0.40.0 \
-             invoke==1.7.3 \
-             requests==2.28.2 \
-             jinja2==3.1.2 \
+             setuptools==${SETUPTOOLS_VERSION} \
+             wheel==${WHEEL_VERSION}} \
+             invoke==${INVOKE_VERSION} \
+             requests==${REQUESTS_VERSION} \
+             jinja2==${JINJA2_VERSION} \
              checkov==${CHECKOV_VERSION} \
              circlecigen==${CIRCLECIGEN_VERSION} && \
     sudo npm install -g \
-             $SNYK_VERSION@1.1184.0 \
-             github-release-notes@0.17.3 \
-             bats@1.9.0 && \
+             snyk@${SNYK_VERSION}} \
+             github-release-notes@${GITHUB_RELEASE_NOTES_VERSION} \
+             bats@${BATS_VERSION}} && \
     sudo sh -c "echo 'gem: --no-document' > /etc/gemrc" && \
     sudo gem install \
-             inspec-bin:$INSPEC_BIN_VERSION \
-             json:2.6.3 && \
+             inspec-bin:${INSPEC_BIN_VERSION} \
+             json:${JSON_VERSION}} && \
     curl -SLO "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" && \
     echo "${GCLOUD_SHA256SUM} google-cloud-cli-${GCLOUD_VERSION}-linux-x86_64.tar.gz" > "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
     sha256sum -cs "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && sudo rm "google-cloud-cli-${GCLOUD_VERSION}-SHA256SUMS" && \
