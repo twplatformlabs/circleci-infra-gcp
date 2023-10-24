@@ -26,7 +26,7 @@ ENV GNUPG_VERSION=2.4.3-r0
 ENV DOCKER_VERSION=18.06.1
 # renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
 ENV OPENRC_VERSION=0.48-r0
-# renovate: datasource=repology depName=alpine_3_18/nodejs versioning=loose
+# renovate: datasource=repology depName=alpine_3_18/nodejs versioning=deb
 ENV NODEJS_VERSION=18.17.1-r0
 
 # renovate: datasource=repology depName=pypi/pip versioning=loose
