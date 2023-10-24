@@ -30,7 +30,7 @@ ENV OPENRC_VERSION="0.48-r0"
 ENV NODEJS_VERSION="18.17.1-r0"
 
 # renovate: datasource=repology depName=pypi/pip versioning=loose
-ENV PIP_VERSION="23.2.1"
+ENV PIP_VERSION="23.3.1"
 # renovate: datasource=repology depName=pypi/setuptools versioning=loose
 ENV SETUPTOOLS_VERSION="68.0.0"
 
