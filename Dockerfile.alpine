@@ -13,8 +13,8 @@ LABEL org.opencontainers.image.title="circleci-infra-gcp" \
 
 
 ########## VENDOR TOOL VERSIONS ##########
-ENV TERRAFORM_VERSION=1.6.2
-ENV TERRAFORM_SHA256SUM=183d4654a9e24be4226a9e9f0eafe71ae9b4aadac7c1c7677173989c9530563e
+ENV TERRAFORM_VERSION=1.6.1
+ENV TERRAFORM_SHA256SUM=d1a778850cc44d9348312c9527f471ea1b7a9213205bb5091ec698f3dc92e2a6
 ENV TFLINT_VERSION=0.48.0
 ENV TFSEC_VERSION=1.28.4
 ENV GCLOUD_VERSION=451.0.1
@@ -72,7 +72,7 @@ ENV WHEEL_VERSION="0.41.2"
 ENV INVOKE_VERSION="2.2.0"
 # renovate: datasource=repology depName=pypi/requests versioning=loose
 ENV REQUESTS_VERSION="2.31.0"
-# renovate: datasource=repology depName=pypi/jinja2 versioning=loose
+# renovate: datasource=repology depName=pypi/Jinja2 versioning=loose
 ENV JINJA2_VERSION="3.1.2"
 # renovate: datasource=repology depName=pypi/checkov versioning=loose
 ENV CHECKOV_VERSION="3.0.2"
