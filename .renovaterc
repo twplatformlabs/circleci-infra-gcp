@@ -1,5 +1,14 @@
 {
-  "prConcurrentLimit": 5,
+  "packageRules": [
+    {
+      "matchSourceUrls": ["https://github.com/ThoughtWorks-DPS/circleci-infra-gcp/blob/main/Dockerfile.alpine"],
+      "groupName": "Alpine Dockerfile packages"
+    },
+    {
+      "matchSourceUrls": ["https://github.com/ThoughtWorks-DPS/circleci-infra-gcp/blob/main/Dockerfile.slim"],
+      "groupName": "Slim Dockerfile packages"
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
