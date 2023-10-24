@@ -1,5 +1,5 @@
 {
-  "platformCommit": true,
+  "prConcurrentLimit": 0,
   "customManagers": [
     {
       "customType": "regex",
