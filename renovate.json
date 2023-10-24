@@ -1,11 +1,11 @@
 {
   "packageRules": [
     {
-      "matchSourceUrls": ["https://github.com/ThoughtWorks-DPS/circleci-infra-gcp/blob/main/Dockerfile.alpine"],
+      "matchSourceUrls": [".*Dockerfile.alpine$"],
       "groupName": "Alpine Dockerfile packages"
     },
     {
-      "matchSourceUrls": ["https://github.com/ThoughtWorks-DPS/circleci-infra-gcp/blob/main/Dockerfile.slim"],
+      "matchSourceUrls": [".*Dockerfile.slim$"],
       "groupName": "Slim Dockerfile packages"
     }
   ],
@@ -20,5 +20,10 @@
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
+  ],
+  "extends": [
+    "config:recommended",
+    ":prHourlyLimitNone",
+    ":rebaseStalePrs"
   ]
 }
