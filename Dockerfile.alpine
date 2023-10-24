@@ -27,7 +27,7 @@ ENV DOCKER_VERSION="18.06.1"
 # renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
 ENV OPENRC_VERSION="0.48-r0"
 # renovate: datasource=repology depName=alpine_3_18/nodejs versioning=deb
-ENV NODEJS_VERSION="18.17.1-r0"
+ENV NODEJS_VERSION="18.18.2-r0"
 
 # renovate: datasource=repology depName=pypi/pip versioning=loose
 ENV PIP_VERSION="23.3.1"
