@@ -9,5 +9,6 @@
         "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
       }
     ],
-    "branchPrefix": "renovate-test"
+    "branchPrefix": "renovate-test-",
+    "branchPrefixOld": "renovate-first-test-",
   }
