@@ -30,3 +30,8 @@ repos:
         language: system
         exclude: ^Dockerfile.alpine.unpinned, ^Dockerfile.slim.unpinned
         files: ^Dockerfile.alpine, ^Dockerfile.slim
+      - id: renovate-config-validator
+        name: renovate-config-validator
+        entry: renovate-config-validator
+        language: system
+        files: ^.renovaterc$

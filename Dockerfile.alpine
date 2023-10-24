@@ -21,24 +21,24 @@ ENV CHECKOV_VERSION=2.3.301
 ENV DRIFTCTL_VERSION=0.39.0
 ENV CIRCLECIGEN_VERSION==0.0.9
 # renovate: datasource=repology depName=alpine_3_18/gnupg versioning=loose
-ENV GNUPG_VERSION=2.4.3-r0
+ENV GNUPG_VERSION="2.4.3-r0"
 # renovate: datasource=repology depName=alpine_3_18/docker versioning=loose
-ENV DOCKER_VERSION=18.06.1
+ENV DOCKER_VERSION="18.06.1"
 # renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
-ENV OPENRC_VERSION=0.48-r0
+ENV OPENRC_VERSION="0.48-r0"
 # renovate: datasource=repology depName=alpine_3_18/nodejs versioning=deb
-ENV NODEJS_VERSION=18.17.1-r0
+ENV NODEJS_VERSION="18.17.1-r0"
 
 # renovate: datasource=repology depName=pypi/pip versioning=loose
-ENV PIP_VERSION=23.2.1
+ENV PIP_VERSION="23.2.1"
 # renovate: datasource=repology depName=pypi/setuptools versioning=loose
-ENV SETUPTOOLS_VERSION=68.0.0
+ENV SETUPTOOLS_VERSION="68.0.0"
 
 # renovate: datasource=npm depName=snyk versioning=loose
-ENV SNYK_VERSION=1.1184.0
+ENV SNYK_VERSION="1.1184.0"
 
 # renovate: datasource=repology depName=rubygems/inspec-bin versioning=loose
-ENV INSPEC_BIN_VERSION=5.21.29
+ENV INSPEC_BIN_VERSION="5.21.29"
 
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 
