@@ -17,6 +17,9 @@ ENV TFLINT_VERSION=0.48.0
 ENV TFSEC_VERSION=1.28.4
 ENV GCLOUD_VERSION=451.0.1
 ENV GCLOUD_SHA256SUM=8446f6d837168d7d66dd192c2221c1081c16a2b93cb54642a6bfb7078cd3dd53
+ENV CHECKOV_VERSION=2.5.6
+ENV DRIFTCTL_VERSION=0.39.0
+ENV CIRCLEPIPE_VERSION=0.2.0
 ENV COSIGN_VERSION=2.2.0
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -47,6 +50,8 @@ ENV GCC_VERSION="4:13.2.0-1"
 ENV MAKE_VERSION="4.3-4.1"
 
 ########## PYTHON VERSIONS ##########
+# renovate: datasource=repology depName=pypi/setuptools versioning=loose
+ENV SETUPTOOLS_VERSION="68.2.2"
 # renovate: datasource=repology depName=pypi/wheel versioning=loose
 ENV WHEEL_VERSION="0.41.2"
 # renovate: datasource=repology depName=pypi/invoke versioning=loose
@@ -79,7 +84,7 @@ ENV PATH=/usr/local/google-cloud-sdk/bin:/home/circleci/.rbenv/bin:$PATH:/usr/lo
 ENV GOPATH=/home/circleci/.go
 
 # sudo since twdps circleci base images set the USER=cirlceci
-# hadolint ignore=DL3004
+# hadolint ignore=DL3004, SC2086
 RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
                  wget=${WGET_VERSION} \
                  jq=${JQ_VERSION} \
@@ -106,7 +111,7 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     sudo ln -f -s /usr/bin/pydoc3 /usr/bin/pydoc && \
     sudo ln -f -s /usr/bin/python3 /usr/bin/python && \
     sudo ln -f -s /usr/bin/python3-config /usr/bin/python-config && \
-    sudo pip install --no-cache-dir --break-system-packages setuptools==68.2.2 && \
+    sudo pip install --no-cache-dir --break-system-packages setuptools==${SETUPTOOLS_VERSION} && \
     sudo pip install --no-cache-dir --break-system-packages \
              wheel==${WHEEL_VERSION} \
              invoke==${INVOKE_VERSION} \
@@ -142,6 +147,12 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     curl -L https://github.com/snyk/driftctl/releases/download/v${DRIFTCTL_VERSION}/driftctl_linux_amd64 -o driftctl && \
     chmod +x driftctl && \
     sudo mv driftctl /usr/local/bin/driftctl && \
+    curl -SLO https://github.com/ThoughtWorks-DPS/circlepipe/releases/download/${CIRCLEPIPE_VERSION}/circlepipe_Linux_amd64.tar.gz && \
+    mkdir ./circlepipe && tar -xzf circlepipe_Linux_amd64.tar.gz -C ./circlepipe && \
+    sudo mv ./circlepipe/circlepipe /usr/local/bin/circlepipe && \
+    sudo rm -rf ./circlepipe circlepipe_Linux_amd64.tar.gz && \
+    curl -LO https://github.com/sigstore/cosign/releases/download/v${COSIGN_VERSION}/cosign-linux-amd64 && \
+    chmod +x cosign-linux-amd64 && sudo mv cosign-linux-amd64 /usr/local/bin/cosign && \
     sudo -u circleci mkdir /home/circleci/.gnupg && \
     sudo -u circleci bash -c "echo 'allow-loopback-pinentry' > /home/circleci/.gnupg/gpg-agent.conf" && \
     sudo -u circleci bash -c "echo 'pinentry-mode loopback' > /home/circleci/.gnupg/gpg.conf" && \

@@ -42,6 +42,8 @@ ENV RUBY_WEBRICK_VERSION="1.8.1-r0"
 ENV RUBY_BUNDLER_VERSION="2.4.15-r0"
 # renovate: datasource=repology depName=alpine_3_18/python3 versioning=loose
 ENV PYTHON3_VERSION="3.11.6-r0"
+# renovate: datasource=repology depName=alpine_3_18/perl-utils versioning=loose
+ENV PERL_UTILS_VERSION="5.36.1-r2"
 # renovate: datasource=repology depName=alpine_3_18/jq versioning=loose
 ENV JQ_VERSION="1.6-r3"
 # renovate: datasource=repology depName=alpine_3_18/build-base versioning=loose
@@ -110,6 +112,7 @@ RUN sudo bash -c "echo 'http://dl-cdn.alpinelinux.org/alpine/edge/main' >> /etc/
              ruby-webrick==${RUBY_WEBRICK_VERSION} \
              ruby-bundler==${RUBY_BUNDLER_VERSION} \
              python3==${PYTHON3_VERSION} \
+             perl-utils==${PERL_UTILS_VERSION} \
              jq==${JQ_VERSION} && \
     sudo apk add --no-cache --virtual build-dependencies \
              build-base==${BUILD_BASE_VERSION} \
