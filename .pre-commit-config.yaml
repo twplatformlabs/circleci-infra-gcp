@@ -34,4 +34,4 @@ repos:
         name: renovate-config-validator
         entry: renovate-config-validator
         language: system
-        files: ^.renovaterc$
+        files: ^renovate.json$
