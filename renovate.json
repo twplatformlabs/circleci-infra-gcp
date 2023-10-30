@@ -1,12 +1,8 @@
 {
   "packageRules": [
     {
-      "matchFileNames": ["Dockerfile.alpine"],
-      "groupName": "Alpine Dockerfile packages"
-    },
-    {
-      "matchFileNames": ["Dockerfile.slim"],
-      "groupName": "Slim Dockerfile packages"
+      "matchFileNames": ["Dockerfile.[alpine|slim]"],
+      "groupName": "Dockerfile packages"
     }
   ],
   "customManagers": [
