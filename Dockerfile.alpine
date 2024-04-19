@@ -27,7 +27,7 @@ ENV DRIFTCTL_VERSION=0.39.0
 # renovate: datasource=repology depName=alpine_3_18/gnupg versioning=loose
 ENV GNUPG_VERSION="2.4.3-r0"
 # renovate: datasource=repology depName=alpine_3_18/docker versioning=loose
-ENV DOCKER_VERSION="23.0.6-r6"
+ENV DOCKER_VERSION="25.0.5-r0"
 # renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
 ENV OPENRC_VERSION="0.48-r0"
 # renovate: datasource=repology depName=alpine_3_18/nodejs versioning=loose
