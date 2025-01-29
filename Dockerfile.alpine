@@ -91,7 +91,7 @@ ENV BATS_VERSION="1.10.0"
 
 ########## RUBY VERSIONS ##########
 # renovate: datasource=repology depName=rubygems/inspec-bin versioning=loose
-ENV INSPEC_BIN_VERSION="5.22.3"
+ENV INSPEC_BIN_VERSION="6.8.24"
 # renovate: datasource=repology depName=rubygems/json versioning=loose
 ENV JSON_VERSION="2.6.3"
 
