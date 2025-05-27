@@ -67,7 +67,7 @@ ENV MAKE_VERSION="4.4.1-r1"
 # renovate: datasource=repology depName=pypi/pip versioning=loose
 ENV PIP_VERSION="23.3.1"
 # renovate: datasource=repology depName=pypi/setuptools versioning=loose
-ENV SETUPTOOLS_VERSION="68.2.2"
+ENV SETUPTOOLS_VERSION="80.9.0"
 # renovate: datasource=repology depName=pypi/wheel versioning=loose
 ENV WHEEL_VERSION="0.41.3"
 # renovate: datasource=repology depName=pypi/invoke versioning=loose
