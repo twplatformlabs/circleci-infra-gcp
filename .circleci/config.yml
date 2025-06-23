@@ -2,16 +2,13 @@
 version: 2.1
 
 orbs:
-  executor-tools: twdps/executor-tools@1.10.0
-  op: twdps/onepassword@1.2.0
-  do: twdps/pipeline-events@2.0.0
-
-# ================================================================= global pipeline parameters
+  executor-tools: twdps/executor-tools@5.0.0
+  op: twdps/onepassword@3.0.0
+  do: twdps/pipeline-events@5.1.0
 
 globals:
-  - &context empc-lab
+  - &context platform
   - &shell op run --env-file op.env -- /bin/bash -eo pipefail
-  - &registry docker.io
 
 on-push-main: &on-push-main
   branches:
@@ -19,131 +16,134 @@ on-push-main: &on-push-main
   tags:
     ignore: /.*/
 
+on-each-run: &on-each-run
+  branches:
+    only: /main/
+  tags:
+    only: /.*/
+
 on-tag-main: &on-tag-main
   branches:
     ignore: /.*/
   tags:
     only: /.*/
 
-# ================================================================= workflows
+command:
+
+  set-environment:
+    steps:
+      - op/env
+      - op/write-to-file:
+          op-value: platform/svc-cosign-private-key/notesPlain
+          out-file: cosign.key
+      - op/write-to-file:
+          op-value: platform/svc-cosign-public-key/notesPlain
+          out-file: cosign.pub
 
 workflows:
-  version: 2
 
-  alpine image build:
+  build and publish:
     jobs:
-      - executor-tools/machine-executor-dev-release:
+      - executor-tools/dev-release:
           name: alpine image build
           context: *context
-          registry: *registry
+          shell: *shell
           dockerfile: Dockerfile.alpine
           image: twdps/circleci-infra-gcp
           tag: alpine-edge
-          docker-cve-scan: false
-          snyk-organization: twdps
-          severity-threshold: medium
-          cis-docker-image-scan: true
-          skip-base-image: true
+          snyk-scan: true
+          snyk-severity-threshold: high
+          snyk-skip-base-image: true
+          snyk-organization: twplatformlabs
           bats-test: true
-          test-path: test/circleci_infra_gcp_alpine.bats
-          container-name: circleci-infra-gcp-alpine-edge
+          bats-entry-point: /bin/ash
+          bats-test-path: test/circleci_infra_gcp.bats
+          opencontainer-labels: true
+          security-scan-nofail: true
           after-checkout:
-            - op/env:
-                env-file: op.env
-          before-build:
-            - run:
-                name: update CREATED and VERSION in LABELS
-                command: |
-                  sed -i "s/CREATED/$(date -u +"%Y-%m-%dT%H:%M:%SZ")/g" Dockerfile.alpine
-                  sed -i "s/VERSION/${CIRCLE_SHA1}/g" Dockerfile.alpine
-          filters: *on-push-main
+            - op/env
+          filters: *on-each-run
 
-  slim image build:
-    jobs:
-      - executor-tools/machine-executor-dev-release:
-          name: slim image build
+      - executor-tools/dev-release:
+          name: ubuntu image build
           context: *context
-          registry: *registry
-          dockerfile: Dockerfile.slim
+          shell: *shell
+          dockerfile: Dockerfile.ubuntu
           image: twdps/circleci-infra-gcp
-          tag: slim-edge
-          docker-cve-scan: false
-          snyk-organization: twdps
-          severity-threshold: medium
-          cis-docker-image-scan: true
-          skip-base-image: true
+          tag: ubuntu-edge
+          snyk-scan: true
+          snyk-severity-threshold: high
+          snyk-skip-base-image: true
+          snyk-organization: twplatformlabs
           bats-test: true
-          test-path: test/circleci_infra_gcp_slim.bats
-          container-name: circleci-infra-gcp-slim-edge
+          bats-entry-point: /bin/bash
+          bats-test-path: test/circleci_infra_gcp.bats
+          opencontainer-labels: true
+          security-scan-nofail: true
           after-checkout:
-            - op/env:
-                env-file: op.env
-          before-build:
-            - run:
-                name: update CREATED and VERSION in LABELS
-                command: |
-                  sed -i "s/CREATED/$(date -u +"%Y-%m-%dT%H:%M:%SZ")/g" Dockerfile.slim
-                  sed -i "s/VERSION/${CIRCLE_SHA1}/g" Dockerfile.slim
-          filters: *on-push-main
+            - op/env
+          filters: *on-each-run
 
-  release version:
-    jobs:
 
-      - executor-tools/publish:
-          name: alpine release
-          shell: *shell
-          context: *context
-          registry: *registry
-          pull-tag: alpine-edge
-          tag-annotation: alpine-
-          image: twdps/circleci-infra-gcp
-          release-tag: alpine-stable
-          sign-image: true
-          sbom: true
-          after-publish:
-            - run:
-                name: setup cosign keys
-                command: |
-                  op inject -i cosign.key.env -o cosign.key
-                  op inject -i cosign.pub.env -o cosign.pub
-          filters: *on-tag-main
 
-      - executor-tools/publish:
-          name: slim release
-          shell: *shell
-          context: *context
-          registry: *registry
-          pull-tag: slim-edge
-          tag-annotation: slim-
-          image: twdps/circleci-infra-gcp
-          release-tag: slim-stable
-          sign-image: true
-          sbom: true
-          after-publish:
-            - run:
-                name: setup cosign keys
-                command: |
-                  op inject -i cosign.key.env -o cosign.key
-                  op inject -i cosign.pub.env -o cosign.pub
-          filters: *on-tag-main
+  # release version:
+  #   jobs:
 
-  release-events:
-    jobs:
-      - do/schedule-pipeline:
-          name: configure weekly trigger
-          shell: *shell
-          context: *context
-          scheduled-pipeline-name: weekly-ci-build
-          scheduled-pipeline-description: |
-            Automatically trigger image build on a weekly schedule. Failure of
-            this recurring build indicates new releases of dependent packages.
-          hours-of-day: "[1]"
-          days-of-week: "[\"SUN\"]"
-          filters: *on-tag-main
+  #     - executor-tools/publish:
+  #         name: alpine release
+  #         shell: *shell
+  #         context: *context
+  #         registry: *registry
+  #         pull-tag: alpine-edge
+  #         tag-annotation: alpine-
+  #         image: twdps/circleci-infra-gcp
+  #         release-tag: alpine-stable
+  #         sign-image: true
+  #         sbom: true
+  #         after-publish:
+  #           - run:
+  #               name: setup cosign keys
+  #               command: |
+  #                 op inject -i cosign.key.env -o cosign.key
+  #                 op inject -i cosign.pub.env -o cosign.pub
+  #         filters: *on-tag-main
 
-      - do/release:
-          name: generate release notes
-          shell: *shell
-          context: *context
-          on-tag: true
-          filters: *on-tag-main
+  #     - executor-tools/publish:
+  #         name: slim release
+  #         shell: *shell
+  #         context: *context
+  #         registry: *registry
+  #         pull-tag: slim-edge
+  #         tag-annotation: slim-
+  #         image: twdps/circleci-infra-gcp
+  #         release-tag: slim-stable
+  #         sign-image: true
+  #         sbom: true
+  #         after-publish:
+  #           - run:
+  #               name: setup cosign keys
+  #               command: |
+  #                 op inject -i cosign.key.env -o cosign.key
+  #                 op inject -i cosign.pub.env -o cosign.pub
+  #         filters: *on-tag-main
+
+  # release-events:
+  #   jobs:
+  #     - do/schedule-pipeline:
+  #         name: configure weekly trigger
+  #         shell: *shell
+  #         context: *context
+  #         scheduled-pipeline-name: weekly-ci-build
+  #         scheduled-pipeline-description: |
+  #           Automatically trigger image build on a weekly schedule. Failure of
+  #           this recurring build indicates new releases of dependent packages.
+  #         hours-of-day: "[1]"
+  #         days-of-week: "[\"SUN\"]"
+  #         filters: *on-tag-main
+
+  #     - do/release:
+  #         name: generate release notes
+  #         shell: *shell
+  #         context: *context
+  #         on-tag: true
+  #         filters: *on-tag-main
