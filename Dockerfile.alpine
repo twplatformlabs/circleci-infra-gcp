@@ -25,35 +25,35 @@ ENV DRIFTCTL_VERSION=0.39.0
 
 ########## ALPINE VERSIONS ##########
 # renovate: datasource=repology depName=alpine_3_18/gnupg versioning=loose
-ENV GNUPG_VERSION="2.4.3-r0"
+ENV GNUPG_VERSION="2.4.4-r0"
 # renovate: datasource=repology depName=alpine_3_18/docker versioning=loose
 ENV DOCKER_VERSION="23.0.6-r6"
 # renovate: datasource=repology depName=alpine_3_18/openrc versioning=loose
 ENV OPENRC_VERSION="0.48-r0"
 # renovate: datasource=repology depName=alpine_3_18/nodejs versioning=loose
-ENV NODEJS_VERSION="18.18.2-r0"
+ENV NODEJS_VERSION="18.20.1-r0"
 # renovate: datasource=repology depName=alpine_3_18/npm versioning=loose
 ENV NPM_VERSION="9.6.6-r0"
 # renovate: datasource=repology depName=alpine_3_18/ruby versioning=loose
-ENV RUBY_VERSION="3.2.2-r0"
+ENV RUBY_VERSION="3.2.4-r0"
 # renovate: datasource=repology depName=alpine_3_18/ruby-webrick versioning=loose
 ENV RUBY_WEBRICK_VERSION="1.8.1-r0"
 # renovate: datasource=repology depName=alpine_3_18/ruby-bundler versioning=loose
 ENV RUBY_BUNDLER_VERSION="2.4.15-r0"
 # renovate: datasource=repology depName=alpine_3_18/python3 versioning=loose
-ENV PYTHON3_VERSION="3.11.6-r0"
+ENV PYTHON3_VERSION="3.11.12-r1"
 # renovate: datasource=repology depName=alpine_3_18/perl-utils versioning=loose
-ENV PERL_UTILS_VERSION="5.36.1-r2"
+ENV PERL_UTILS_VERSION="5.36.2-r1"
 # renovate: datasource=repology depName=alpine_3_18/jq versioning=loose
-ENV JQ_VERSION="1.6-r3"
+ENV JQ_VERSION="1.6-r4"
 # renovate: datasource=repology depName=alpine_3_18/build-base versioning=loose
 ENV BUILD_BASE_VERSION="0.5-r3"
 # renovate: datasource=repology depName=alpine_3_18/openssl-dev versioning=loose
-ENV OPENSSL_DEV_VERSION="3.1.4-r0"
+ENV OPENSSL_DEV_VERSION="3.1.8-r0"
 # renovate: datasource=repology depName=alpine_3_18/python3-dev versioning=loose
-ENV PYTHON3_DEV_VERSION="3.11.6-r0"
+ENV PYTHON3_DEV_VERSION="3.11.12-r1"
 # renovate: datasource=repology depName=alpine_3_18/ruby-dev versioning=loose
-ENV RUBY_DEV_VERSION="3.2.2-r0"
+ENV RUBY_DEV_VERSION="3.2.4-r0"
 # renovate: datasource=repology depName=alpine_3_18/libffi-dev versioning=loose
 ENV LIBFFI_DEV_VERSION="3.4.4-r2"
 # renovate: datasource=repology depName=alpine_3_18/g++ versioning=loose
@@ -69,31 +69,31 @@ ENV PIP_VERSION="23.3.1"
 # renovate: datasource=repology depName=pypi/setuptools versioning=loose
 ENV SETUPTOOLS_VERSION="68.2.2"
 # renovate: datasource=repology depName=pypi/wheel versioning=loose
-ENV WHEEL_VERSION="0.41.3"
+ENV WHEEL_VERSION="0.46.1"
 # renovate: datasource=repology depName=pypi/invoke versioning=loose
 ENV INVOKE_VERSION="2.2.0"
 # renovate: datasource=repology depName=pypi/requests versioning=loose
-ENV REQUESTS_VERSION="2.31.0"
+ENV REQUESTS_VERSION="2.32.4"
 # renovate: datasource=repology depName=pypi/Jinja2 versioning=loose
-ENV JINJA2_VERSION="3.1.2"
+ENV JINJA2_VERSION="3.1.6"
 # renovate: datasource=repology depName=pypi/checkov versioning=loose
-ENV CHECKOV_VERSION="3.0.14"
+ENV CHECKOV_VERSION="3.2.443"
 # renovate: datasource=repology depName=pypi/circlecigen versioning=loose
 ENV CIRCLECIGEN_VERSION=="0.0.9"
 
 ########## NPM VERSIONS ##########
 # renovate: datasource=npm depName=snyk versioning=loose
-ENV SNYK_VERSION="1.1237.0"
+ENV SNYK_VERSION="1.1297.3"
 # renovate: datasource=npm depName=github-release-notes versioning=loose
 ENV GITHUB_RELEASE_NOTES_VERSION="0.17.3"
 # renovate: datasource=npm depName=bats versioning=loose
-ENV BATS_VERSION="1.10.0"
+ENV BATS_VERSION="1.12.0"
 
 ########## RUBY VERSIONS ##########
 # renovate: datasource=repology depName=rubygems/inspec-bin versioning=loose
 ENV INSPEC_BIN_VERSION="5.22.3"
 # renovate: datasource=repology depName=rubygems/json versioning=loose
-ENV JSON_VERSION="2.6.3"
+ENV JSON_VERSION="2.12.2"
 
 ########## SCRIPTS ##########
 
