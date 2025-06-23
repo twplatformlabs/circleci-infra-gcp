@@ -28,7 +28,7 @@ on-tag-main: &on-tag-main
   tags:
     only: /.*/
 
-command:
+commands:
 
   set-environment:
     steps:
