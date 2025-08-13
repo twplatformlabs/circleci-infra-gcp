@@ -1,5 +1,11 @@
 # #!/usr/bin/env bats
 
+@test "gcloud available" {
+  run bash -c "docker exec container-test gcloud --version"
+  [[ "${output}" =~ "Google Cloud SDK" ]]
+  [[ "${output}" =~ "gke-gcloud-auth-plugin" ]]
+}
+
 @test "terraform available" {
   run bash -c "docker exec container-test terraform --help"
   [[ "${output}" =~ "Usage: terraform" ]]

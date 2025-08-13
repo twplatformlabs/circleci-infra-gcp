@@ -43,6 +43,7 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     sudo chmod +x /usr/local/google-cloud-sdk/install.sh && \
     sudo chown -R "$(whoami)" /usr/local/google-cloud-sdk && \
     sudo bash -c "/usr/local/google-cloud-sdk/install.sh -q" && \
+    sudo gcloud components install gke-gcloud-auth-plugin && \
     curl -SLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
     sudo unzip -j "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" terraform -d /usr/local/bin && \
     sudo rm "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
