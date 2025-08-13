@@ -13,6 +13,9 @@ LABEL org.opencontainers.image.created="%%CREATED%%" \
       org.opencontainers.image.base.name="%%BASE%%"
 
 ENV TERRAFORM_VERSION=1.12.2
+ENV CLOUDSDK_PYTHON=/usr/bin/python3.12
+ENV PATH="/usr/local/google-cloud-sdk/bin:$PATH"
+
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
 
 # Configured for automatic, monthly build using current package repository release versions.
@@ -44,7 +47,6 @@ RUN sudo apk add --no-cache \
     sudo chmod +x /usr/local/google-cloud-sdk/install.sh && \
     sudo chown -R "$(whoami)" /usr/local/google-cloud-sdk && \
     sudo bash -c "/usr/local/google-cloud-sdk/install.sh -q" && \
-    sudo gcloud components install gke-gcloud-auth-plugin && \
     curl -SLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
     sudo unzip -j "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" terraform -d /usr/local/bin && \
     sudo rm "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
@@ -61,10 +63,11 @@ RUN sudo apk add --no-cache \
     sudo rm -rf ./circlepipe circlepipe_Linux_amd64.tar.gz && \
     download_url=$(curl -s "https://api.github.com/repos/sigstore/cosign/releases/latest" | jq -r ".assets[] | select(.name == \"cosign-linux-amd64\") | .browser_download_url") && \
     curl -LO "${download_url}" && \
-    chmod +x cosign-linux-amd64 && sudo mv cosign-linux-amd64 /usr/local/bin/cosign
-
-ENV PATH="/usr/local/google-cloud-sdk/bin:$PATH"
+    chmod +x cosign-linux-amd64 && sudo mv cosign-linux-amd64 /usr/local/bin/cosign && \
+    gcloud components install gke-gcloud-auth-plugin -q
 
 USER circleci
 
 WORKDIR /home/circleci/project
+
+#     sudo bash -c "gcloud components install gke-gcloud-auth-plugin -q" && \
