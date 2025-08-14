@@ -60,3 +60,8 @@
   run bash -c "docker exec container-test helm --help"
   [[ "${output}" =~ "helm [command]" ]]
 }
+
+@test "dig available" {
+  run bash -c "docker exec container-test dig -h"
+  [[ "${output}" =~ "dig [@global-server]" ]]
+}
