@@ -15,7 +15,7 @@ Primary packages include:
 - kubectl, helm, cosign, circlepipe
 - nodejs, python   
 
-**Note** Terraform currently pinned to 1.12.2  
+**Note** Terraform currently pinned to 1.13.3  
 
 _Review the build and CVE scan logs in the release artifacts for specific packages versions and known vulnerabilities (if any)._  
 
