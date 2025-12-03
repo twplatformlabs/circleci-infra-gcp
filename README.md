@@ -12,10 +12,10 @@ Tools and packages used in infrastructure pipelines managing Google Cloud infras
 
 Primary packages include:  
 - gcloud, terraform, tflint, snyk, trivy, terrascan, checkov, bats  
-- kubectl, helm, cosign, circlepipe
+- kubectl, helm, cosign, karmadactl
 - nodejs, python   
 
-**Note** Terraform currently pinned to 1.13.3  
+**Note** Terraform currently pinned to 1.14.1  
 
 _Review the build and CVE scan logs in the release artifacts for specific packages versions and known vulnerabilities (if any)._  
 

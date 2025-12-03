@@ -12,7 +12,7 @@ LABEL org.opencontainers.image.created="%%CREATED%%" \
       org.opencontainers.image.description="Alpine-based CircleCI executor image for terraform pipelines" \
       org.opencontainers.image.base.name="%%BASE%%"
 
-ENV TERRAFORM_VERSION=1.13.3
+ENV TERRAFORM_VERSION=1.14.1
 ENV CLOUDSDK_PYTHON=/usr/bin/python3.12
 ENV PATH="/usr/local/google-cloud-sdk/bin:$PATH"
 
