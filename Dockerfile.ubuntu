@@ -34,6 +34,7 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     sudo chmod +x /usr/local/google-cloud-sdk/install.sh && \
     sudo chown -R "$(whoami)" /usr/local/google-cloud-sdk && \
     sudo bash -c "/usr/local/google-cloud-sdk/install.sh -q" && \
+    download_version=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r '.current_version') && \
     curl -SLO "https://releases.hashicorp.com/terraform/${download_version}/terraform_${download_version}_linux_amd64.zip" > "terraform_${download_version}_linux_amd64.zip" && \
     sudo unzip "terraform_${download_version}_linux_amd64.zip" && sudo mv terraform /usr/local/bin/terraform && \
     sudo rm "terraform_${download_version}_linux_amd64.zip" && rm LICENSE.txt && \
