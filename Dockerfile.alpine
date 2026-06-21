@@ -1,19 +1,6 @@
-FROM twdps/circleci-base-image:alpine-stable
+FROM ghcr.io/twplatformlabs/circleci-base-image:alpine-latest
 
-LABEL org.opencontainers.image.created="%%CREATED%%" \
-      org.opencontainers.image.authors="nic.cheneweth@thoughtworks.com" \
-      org.opencontainers.image.documentation="https://github.com/twplatformlabs/circleci-infra-aws" \
-      org.opencontainers.image.source="https://github.com/twplatformlabs/circleci-infra-aws" \
-      org.opencontainers.image.url="https://github.com/twplatformlabs/circleci-infra-aws" \
-      org.opencontainers.image.version="%%VERSION%%" \
-      org.opencontainers.image.vendor="ThoughtWorks, Inc." \
-      org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.title="circleci-infra-aws" \
-      org.opencontainers.image.description="Alpine-based CircleCI executor image for terraform pipelines" \
-      org.opencontainers.image.base.name="%%BASE%%"
-
-ENV TERRAFORM_VERSION=1.14.1
-ENV CLOUDSDK_PYTHON=/usr/bin/python3.12
+ENV CLOUDSDK_PYTHON=/usr/bin/python3
 ENV PATH="/usr/local/google-cloud-sdk/bin:$PATH"
 
 SHELL ["/bin/ash", "-o", "pipefail", "-c"]
@@ -48,9 +35,14 @@ RUN sudo apk add --no-cache \
     sudo chmod +x /usr/local/google-cloud-sdk/install.sh && \
     sudo chown -R "$(whoami)" /usr/local/google-cloud-sdk && \
     sudo bash -c "/usr/local/google-cloud-sdk/install.sh -q" && \
-    curl -SLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
-    sudo unzip -j "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" terraform -d /usr/local/bin && \
-    sudo rm "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    download_version=$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r '.current_version') && \
+    curl -SLO "https://releases.hashicorp.com/terraform/${download_version}/terraform_${download_version}_linux_amd64.zip" > "terraform_${download_version}_linux_amd64.zip" && \
+    sudo unzip "terraform_${download_version}_linux_amd64.zip" && sudo mv terraform /usr/local/bin/terraform && \
+    sudo rm "terraform_${download_version}_linux_amd64.zip" && rm LICENSE.txt && \
+    curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh -o install-opentofu.sh && \
+    chmod +x install-opentofu.sh && \
+    sudo bash -c "./install-opentofu.sh --install-method apk" && \
+    rm -f install-opentofu.sh && \
     sudo bash -c "curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash" && \
     curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin && \
     sudo bash -c "curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" && \
@@ -70,5 +62,3 @@ RUN sudo apk add --no-cache \
 USER circleci
 
 WORKDIR /home/circleci/project
-
-#     sudo bash -c "gcloud components install gke-gcloud-auth-plugin -q" && \

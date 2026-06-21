@@ -1,20 +1,8 @@
-FROM twdps/circleci-base-image:ubuntu-stable
+FROM ghcr.io/twplatformlabs/circleci-base-image:ubuntu-latest
 
-LABEL org.opencontainers.image.created="%%CREATED%%" \
-      org.opencontainers.image.authors="nic.cheneweth@thoughtworks.com" \
-      org.opencontainers.image.documentation="https://github.com/twplatformlabs/circleci-infra-aws" \
-      org.opencontainers.image.source="https://github.com/twplatformlabs/circleci-infra-aws" \
-      org.opencontainers.image.url="https://github.com/twplatformlabs/circleci-infra-aws" \
-      org.opencontainers.image.version="%%VERSION%%" \
-      org.opencontainers.image.vendor="ThoughtWorks, Inc." \
-      org.opencontainers.image.licenses="MIT" \
-      org.opencontainers.image.title="circleci-infra-aws" \
-      org.opencontainers.image.description="Ubuntu-based CircleCI executor image for terraform pipelines" \
-      org.opencontainers.image.base.name="%%BASE%%"
-
-ENV TERRAFORM_VERSION=1.14.1
-ENV CLOUDSDK_PYTHON=/usr/bin/python3.12
+ENV CLOUDSDK_PYTHON=/usr/bin/python3
 ENV PATH="/usr/local/google-cloud-sdk/bin:$PATH"
+
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 # Configured for automatic, monthly build using current package repository release versions.
@@ -46,9 +34,16 @@ RUN sudo apt-get update && sudo apt-get install --no-install-recommends -y \
     sudo chmod +x /usr/local/google-cloud-sdk/install.sh && \
     sudo chown -R "$(whoami)" /usr/local/google-cloud-sdk && \
     sudo bash -c "/usr/local/google-cloud-sdk/install.sh -q" && \
-    curl -SLO "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" > "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
-    sudo unzip -j "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" terraform -d /usr/local/bin && \
-    sudo rm "terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    curl -SLO "https://releases.hashicorp.com/terraform/${download_version}/terraform_${download_version}_linux_amd64.zip" > "terraform_${download_version}_linux_amd64.zip" && \
+    sudo unzip "terraform_${download_version}_linux_amd64.zip" && sudo mv terraform /usr/local/bin/terraform && \
+    sudo rm "terraform_${download_version}_linux_amd64.zip" && rm LICENSE.txt && \
+    sudo install -m 0755 -d /etc/apt/keyrings && \
+    curl -fsSL https://get.opentofu.org/opentofu.gpg | sudo tee /etc/apt/keyrings/opentofu.gpg >/dev/null && \
+    curl -fsSL https://packages.opentofu.org/opentofu/tofu/gpgkey | sudo gpg --no-tty --batch --dearmor -o /etc/apt/keyrings/opentofu-repo.gpg >/dev/null && \
+    sudo chmod a+r /etc/apt/keyrings/opentofu.gpg /etc/apt/keyrings/opentofu-repo.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main deb-src [signed-by=/etc/apt/keyrings/opentofu.gpg,/etc/apt/keyrings/opentofu-repo.gpg] https://packages.opentofu.org/opentofu/tofu/any/ any main" | sudo tee /etc/apt/sources.list.d/opentofu.list > /dev/null && \
+    sudo chmod a+r /etc/apt/sources.list.d/opentofu.list && \
+    sudo apt-get update && sudo apt-get install -y tofu && \
     sudo bash -c "curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash" && \
     curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin && \
     sudo bash -c "curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" && \
